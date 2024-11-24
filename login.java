@@ -1,149 +1,132 @@
-import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.*;
 
 public class login extends JFrame implements ActionListener {
-    private final JPasswordField passwordField;
-    private final StringBuilder inputPassword;
-    private final String correctPassword = "123456";
-    private JLabel placeholderLabel;
-    private final JLabel forgotPasswordLabel;
+    private final JPasswordField pwdFld;
+    private final StringBuilder inputPwd;
+    private final String correctPwd = "123456";
+    private JLabel lblPlace;
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    login frame = new login();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                login frame = new login();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
 
     public login() {
-        setTitle("Login-Yape");
+        setTitle("login-Yape");
         setSize(385, 730);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
 
-        inputPassword = new StringBuilder();
+        inputPwd = new StringBuilder();
 
-        JPanel panelSuperior = new JPanel(new GridBagLayout());
-        panelSuperior.setBackground(new Color(128, 0, 128));
-        panelSuperior.setPreferredSize(new Dimension(385, 365));
+        // Panel superior
+        JPanel pnlTop = new JPanel(new GridBagLayout());
+        pnlTop.setBackground(new Color(128, 0, 128));
+        pnlTop.setPreferredSize(new Dimension(385, 365));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(20, 0, 20, 0);
 
-        placeholderLabel = new JLabel("Ingresa tu clave");
-        placeholderLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        placeholderLabel.setForeground(Color.white);
-        placeholderLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        placeholderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelSuperior.add(placeholderLabel, gbc);
+        lblPlace = new JLabel("Ingresa tu clave");
+        lblPlace.setFont(new Font("Arial", Font.BOLD, 24));
+        lblPlace.setForeground(Color.white);
+        lblPlace.setHorizontalAlignment(SwingConstants.CENTER);
+        pnlTop.add(lblPlace, gbc);
 
         gbc.gridy = 1;
-        JLabel imageLabel = new JLabel();
+        JLabel lblImg = new JLabel();
         ImageIcon icon = new ImageIcon(getClass().getResource("yape.png"));
         Image img = icon.getImage().getScaledInstance(165, 165, Image.SCALE_SMOOTH);
         icon = new ImageIcon(img);
-        imageLabel.setIcon(icon);
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        lblImg.setIcon(icon);
+        lblImg.setHorizontalAlignment(SwingConstants.CENTER);
+        pnlTop.add(lblImg, gbc);
 
-        JPanel imagePanel = new JPanel();
-        imagePanel.setLayout(new BorderLayout());
-        imagePanel.setBackground(Color.WHITE);
-        imagePanel.add(imageLabel, BorderLayout.CENTER);
-        imagePanel.setPreferredSize(new Dimension(210, 210));
-        imagePanel.setBorder(null);
-        panelSuperior.add(imagePanel, gbc);
+        add(pnlTop, BorderLayout.NORTH);
 
-        add(panelSuperior, BorderLayout.NORTH);
+        // Panel central (teclado numérico)
+        JPanel pnlKeyboard = new JPanel(new BorderLayout());
+        pnlKeyboard.setBackground(Color.WHITE);
 
-        JPanel tecladoPanel = new JPanel(new BorderLayout());
-        tecladoPanel.setBackground(Color.WHITE);
+        pwdFld = new JPasswordField(10);
+        pwdFld.setFont(new Font("Arial", Font.BOLD, 24));
+        pwdFld.setHorizontalAlignment(JPasswordField.CENTER);
+        pwdFld.setEchoChar('•');
+        pwdFld.setEditable(false); // Impide escritura manual
+        pwdFld.setOpaque(false);
+        pwdFld.setBorder(BorderFactory.createEmptyBorder());
+        pnlKeyboard.add(pwdFld, BorderLayout.NORTH);
 
-        JPanel passwordPanel = new JPanel();
-        passwordPanel.setLayout(new OverlayLayout(passwordPanel));
-        passwordPanel.setPreferredSize(new Dimension(300, 60));
-        passwordPanel.setBackground(Color.WHITE);
-        passwordPanel.setBorder(null);
+        JPanel pnlBtns = new JPanel(new GridLayout(4, 3, 10, 10));
+        pnlBtns.setBackground(Color.WHITE);
+        pnlBtns.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        passwordField = new JPasswordField(10);
-        passwordField.setFont(new Font("Arial", Font.BOLD, 24));
-        passwordField.setHorizontalAlignment(JPasswordField.CENTER);
-        passwordField.setEchoChar('•');
-        passwordField.setOpaque(false);
-        passwordField.setBorder(BorderFactory.createEmptyBorder());
-        passwordPanel.add(passwordField);
-
-        tecladoPanel.add(passwordPanel, BorderLayout.NORTH);
-
-        JPanel botonesPanel = new JPanel(new GridLayout(4, 3, 10, 10));
-        botonesPanel.setBackground(Color.WHITE);
-        botonesPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        String[] botonesFijos = {"", "Borrar"};
-        ArrayList<String> numeros = new ArrayList<>();
+        ArrayList<String> nums = new ArrayList<>();
         for (int i = 0; i <= 9; i++) {
-            numeros.add(String.valueOf(i));
+            nums.add(String.valueOf(i));
         }
-        Collections.shuffle(numeros);
+        Collections.shuffle(nums);
 
-        int indexNumeros = 0;
+        int idx = 0;
         for (int i = 0; i < 12; i++) {
-            JButton boton;
-            if (i == 9) {
-                boton = new JButton(botonesFijos[0]);
-                boton.setEnabled(false);
-                boton.setBackground(Color.WHITE);
-                boton.setBorder(null);
-            } else if (i == 11) { 
-                boton = new JButton();
-                boton.setBackground(Color.WHITE);
-                boton.setFocusPainted(false);
-                boton.setPreferredSize(new Dimension(50, 50)); 
-                boton.setBorder(null);
+            JButton btn;
+            if (i == 9) { // Botón "Enter"
+                btn = new JButton("Enter");
+                btn.setFont(new Font("Arial", Font.BOLD, 14));
+                btn.setBackground(Color.green);
+                btn.setFocusPainted(false);
+                btn.setPreferredSize(new Dimension(50, 50));
+                btn.setBorder(null);
+                btn.addActionListener(e -> verifyPwd());
+            } else if (i == 11) { // Botón "Borrar"
+                btn = new JButton();
+                btn.setBackground(Color.WHITE);
+                btn.setFocusPainted(false);
+                btn.setPreferredSize(new Dimension(50, 50));
+                btn.setBorder(null);
 
-                ImageIcon borrarIcon = new ImageIcon(getClass().getResource("borrar.jpeg"));
-                Image borrarImg = borrarIcon.getImage().getScaledInstance(30, 20, Image.SCALE_SMOOTH);
-                borrarIcon = new ImageIcon(borrarImg);
-                boton.setIcon(borrarIcon);
-            } else {
-                boton = new JButton(numeros.get(indexNumeros++));
-                boton.setFont(new Font("Arial", Font.BOLD, 14));
-                boton.setBackground(new Color(240, 240, 240)); 
-                boton.setFocusPainted(false);
-                boton.setPreferredSize(new Dimension(50, 50));
-                boton.setBorder(null);
+                ImageIcon deleteIcon = new ImageIcon(getClass().getResource("borrar.jpeg"));
+                Image deleteImg = deleteIcon.getImage().getScaledInstance(30, 20, Image.SCALE_SMOOTH);
+                deleteIcon = new ImageIcon(deleteImg);
+                btn.setIcon(deleteIcon);
+
+                btn.addActionListener(e -> {
+                    if (inputPwd.length() > 0) {
+                        inputPwd.deleteCharAt(inputPwd.length() - 1);
+                        pwdFld.setText(inputPwd.toString());
+                    }
+                    if (inputPwd.length() == 0) {
+                        lblPlace.setVisible(true);
+                    }
+                });
+            } else { // Botones de números
+                btn = new JButton(nums.get(idx++));
+                btn.setFont(new Font("Arial", Font.BOLD, 14));
+                btn.setBackground(new Color(240, 240, 240));
+                btn.setFocusPainted(false);
+                btn.setPreferredSize(new Dimension(50, 50));
+                btn.setBorder(null);
+                btn.addActionListener(this);
             }
-            boton.addActionListener(this);
-            botonesPanel.add(boton);
+            pnlBtns.add(btn);
         }
 
-        tecladoPanel.add(botonesPanel, BorderLayout.CENTER);
-        add(tecladoPanel, BorderLayout.CENTER);
-
-        forgotPasswordLabel = new JLabel("¿OLVIDASTE TU CLAVE?");
-        forgotPasswordLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        forgotPasswordLabel.setForeground(new Color(56, 194, 177));
-        forgotPasswordLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        forgotPasswordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBackground(Color.WHITE);
-        bottomPanel.add(forgotPasswordLabel, BorderLayout.SOUTH);
-
-        add(bottomPanel, BorderLayout.SOUTH);
+        pnlKeyboard.add(pnlBtns, BorderLayout.CENTER);
+        add(pnlKeyboard, BorderLayout.CENTER);
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -153,29 +136,25 @@ public class login extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
 
-        if (e.getSource() instanceof JButton) {
-            JButton boton = (JButton) e.getSource();
-
-            if (boton.getIcon() != null) {
-                if (inputPassword.length() > 0) {
-                    inputPassword.deleteCharAt(inputPassword.length() - 1);
-                    passwordField.setText(inputPassword.toString());
-
-                    if (inputPassword.length() == 0) {
-                        placeholderLabel.setVisible(true);
-                    }
-                }
-            } else {
-                if (inputPassword.length() < 6) {
-                    inputPassword.append(comando);
-                    passwordField.setText(inputPassword.toString());
-
-                    if (inputPassword.length() == 1) {
-                        placeholderLabel.setVisible(false);
-                    }
-                }
-
-            }
+        if (inputPwd.length() < 6) {
+            inputPwd.append(comando);
+            pwdFld.setText(inputPwd.toString());
         }
+
+        if (inputPwd.length() == 1) {
+            lblPlace.setVisible(false);
+        }
+    }
+
+    private void verifyPwd() {
+        if (inputPwd.toString().equals(correctPwd)) {
+            JOptionPane.showMessageDialog(this, "¡Ha ingresado satisfactoriamente!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Clave incorrecta, intente nuevamente.");
+        }
+
+        inputPwd.setLength(0);
+        pwdFld.setText("");
+        lblPlace.setVisible(true);
     }
 }
