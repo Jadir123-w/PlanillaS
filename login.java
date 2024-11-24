@@ -31,7 +31,6 @@ public class login extends JFrame implements ActionListener {
 
         inputPwd = new StringBuilder();
 
-        // Panel superior
         JPanel pnlTop = new JPanel(new GridBagLayout());
         pnlTop.setBackground(new Color(128, 0, 128));
         pnlTop.setPreferredSize(new Dimension(385, 365));
@@ -58,7 +57,6 @@ public class login extends JFrame implements ActionListener {
 
         add(pnlTop, BorderLayout.NORTH);
 
-        // Panel central (teclado numérico)
         JPanel pnlKeyboard = new JPanel(new BorderLayout());
         pnlKeyboard.setBackground(Color.WHITE);
 
@@ -66,7 +64,7 @@ public class login extends JFrame implements ActionListener {
         pwdFld.setFont(new Font("Arial", Font.BOLD, 24));
         pwdFld.setHorizontalAlignment(JPasswordField.CENTER);
         pwdFld.setEchoChar('•');
-        pwdFld.setEditable(false); // Impide escritura manual
+        pwdFld.setEditable(false);
         pwdFld.setOpaque(false);
         pwdFld.setBorder(BorderFactory.createEmptyBorder());
         pnlKeyboard.add(pwdFld, BorderLayout.NORTH);
